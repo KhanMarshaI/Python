@@ -2,5 +2,4 @@
 
 A GUI based countdown. Need to fix the output timer. Use winsound module to notify the user. Use time module to delay the countdown by 1 second. Use the datetime module to find the timedelta. 
 
-KNOWN ISSUE(S):
-# FIX THE TIMER OUTPUT
+Would be more appropriate to call it some kind of alarm?
