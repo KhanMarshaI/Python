@@ -3,7 +3,7 @@ import PySimpleGUI as gui
 
 
 def encode(str):
-    global bytes_to_string
+    # global bytes_to_string # unnecessary to have a global var
     str_bytes = str.encode('ascii') # converting the input into a bytes-like object
     encodedStr =  base64.standard_b64encode(str_bytes)
     bytes_to_string = encodedStr.decode('ascii')
