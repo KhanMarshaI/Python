@@ -1,6 +1,6 @@
 import random
 import PySimpleGUI as gui
-
+import os
 
 class Generator:
     List = []
@@ -18,27 +18,34 @@ class Generator:
         Generator.List.clear()
         return tmp
 
+    def copyToClipboard(self, string):
+        command = 'echo | set /p nul=' + string.strip() + '| clip'
+        os.system(command)
+
 # GUI
 gui.theme('Dark')
 layout = [
-        [gui.Text('Insert the length of password in digits:')],
-        [gui.Input(key = '-INPUT-')],
+        [gui.Text('Length: '), gui.Input(key = '-INPUT-', size=(3,1))],
         [gui.Text(size=(40,1), key='-OUTPUT-')],
-        [gui.Button('Generate'), gui.Button('Quit')]
+        [gui.Button('Generate'), gui.Button('Copy'),gui.Button('Quit')]
 ]
 
-window = gui.Window('Password Generator', layout)
+window = gui.Window('Password Generator', layout, element_justification='l')
 
 
 while True:
     event, value = window.read()
     if event == gui.WINDOW_CLOSED or event == 'Quit':
         break
-
     try:
         tmp = int(value['-INPUT-'])
-        password = Generator(tmp)
-        window['-OUTPUT-'].update('Password = ' + password.log())
+        if event=='Generate':
+            password = Generator(tmp)
+            generatedPass = password.log()
+            window['-OUTPUT-'].update('Password = ' + generatedPass)
+        if event == 'Copy':
+            password.copyToClipboard(generatedPass)
+            gui.popup('Copied to clipboard.')
     except:
         gui.popup('Invalid input.')
 
