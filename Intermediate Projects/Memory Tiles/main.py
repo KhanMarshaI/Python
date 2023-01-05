@@ -1,17 +1,22 @@
 import PySimpleGUI as gui
 from time import sleep
-import random
+from random import choice
 
 MAX_ROW = MAX_COL = 5
+NO_OF_TILES = 3
 button_keys = [[(row, col) for col in range(MAX_COL)] for row in range(MAX_ROW)] # creating keys for the button element
 
 List = [element for i in button_keys for element in i] # converting the nested lists to a Flat List
 arr = [] # I know I know, so many arrays but this was the only approach I could think of
 
 def generateTiles():
-    for i in range(3): # generating random tiles
-        tmp = random.choice(List)
-        arr.append(tmp)
+    for i in range(NO_OF_TILES): # generating random tiles
+        tmp = choice(List)
+        if tmp not in arr: # TO ENSURE THERE ARE NO DUPLICATE TILES
+            arr.append(tmp)
+        else:
+            tmp = choice(List)
+            arr.append(tmp)
         window[tmp].update(button_color='red')
         window.refresh()
     sleep(1)
