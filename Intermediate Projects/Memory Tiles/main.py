@@ -26,7 +26,7 @@ layout = [[gui.Text(f'Score: {score}', key='_score_')],
 layout += [[gui.Button(button_color='snow',key=(row,col)) for col in range(MAX_COL)] for row in range(MAX_ROW)] # generating buttons using List Comprehension
 
 
-window = gui.Window('Test', layout, auto_size_buttons=False,default_button_element_size=(5,2), finalize=True)
+window = gui.Window('Memory Tiles', layout, auto_size_buttons=False,default_button_element_size=(5,2), finalize=True)
 
 generateTiles()
 while True:
