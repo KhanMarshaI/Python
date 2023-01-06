@@ -10,18 +10,19 @@ class Login:
             passwd='root',
             database='testdatabase'
         )
-        self.myCursor = self.database.cursor()
+        self.myCursor = self.database.cursor(buffered=True) # if buffer is set to False on clicking the Login button twice the program will crash due to results being loaded in the cursor
 
     def addUser(self, username, password):
         try:
             validateUsername = self.getUser(username)
             if validateUsername == 0:
-                print('Username already exists!')
+                window['_error_'].update('User already exists, proceed to login!')
             else:
                 self.myCursor.execute('INSERT INTO user (username, password) VALUES (%s,%s)', (str(username), str(password)))
                 self.database.commit()
+                gui.popup('Successfully registered!')
         except:
-            print('Either username already exists, or an error occured.')
+            window['_error_'].update('Either username already exists, or an error occured.')
 
     def getUser(self, username):  # Check whether username already exists in the database or not
         self.myCursor.execute('SELECT * FROM user')
@@ -34,7 +35,10 @@ class Login:
         self.myCursor.execute('SELECT * FROM user')
         for x in self.myCursor:
             if x[0] == username and x[1] == password:
-                pass
+                gui.popup('Login successful!')
+                break
+        else:
+            window['_error_'].update('Incorrect credentials.')
 
 login = Login()
 
@@ -69,5 +73,9 @@ while True:
     event, value = window.read()
     if event == gui.WINDOW_CLOSED:
         break
+    if event=='Login':
+        login.loginUser(value['_username_'], value['_password_'])
+    if event=='Register':
+        login.addUser(value['_username_'], value['_password_'])
 
 window.close()
