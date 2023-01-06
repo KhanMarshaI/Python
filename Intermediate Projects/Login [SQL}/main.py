@@ -1,5 +1,5 @@
 import mysql.connector
-import PySimpleGUI
+import PySimpleGUI as gui
 
 
 class Login:
@@ -30,7 +30,44 @@ class Login:
                 return 0  # if user exists we return 0
         return 1 # else we return 1
 
-x = Login()
-x.addUser('test1', 'test')
-# print(x.getUser())
-# x.myCursor.execute('CREATE TABLE user (username VARCHAR(12), password VARCHAR(16))')
+    def loginUser(self, username, password):
+        self.myCursor.execute('SELECT * FROM user')
+        for x in self.myCursor:
+            if x[0] == username and x[1] == password:
+                pass
+
+login = Login()
+
+# login.addUser('test1', 'test')
+# print(login.getUser())
+# login.myCursor.execute('CREATE TABLE user (username VARCHAR(12), password VARCHAR(16))')
+
+CustomGUITheme = {'BACKGROUND': '#282930',
+                  'TEXT': '#FDFFFF',
+                  'INPUT': '#383942',
+                  'TEXT_INPUT': '#FFFFFF',
+                  'SCROLL': '#c7e78b',
+                  'BUTTON': ('white', '#383942'),
+                  'PROGRESS': ('#01826B', '#D0D0D0'),
+                  'BORDER': 1,
+                  'SLIDER_DEPTH': 0,
+                  'PROGRESS_DEPTH': 0
+}
+gui.theme_add_new('LoginTheme', CustomGUITheme)
+gui.theme('LoginTheme')
+layout = [[gui.Text('Login Menu', size=(20,1),justification='center')],
+          [gui.Text('Username:')],
+          [gui.InputText(size=(21,1), key='_username_')],
+          [gui.Text('Password:')],
+          [gui.InputText(size=(21,1), key='_password_', password_char='*')],
+          [gui.Button('Login'), gui.Button('Register')],
+          [gui.Text(key='_error_', size=(21,2))]
+]
+window = gui.Window('Menu',layout, auto_size_buttons=False, default_button_element_size=(8,1), margins=(50,50))
+
+while True:
+    event, value = window.read()
+    if event == gui.WINDOW_CLOSED:
+        break
+
+window.close()
