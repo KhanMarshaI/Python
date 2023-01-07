@@ -14,13 +14,16 @@ class Login:
 
     def addUser(self, username, password):
         try:
-            validateUsername = self.getUser(username)
-            if validateUsername == 0:
-                window['_error_'].update('User already exists, proceed to login!')
+            if len(username)<=12 and len(password)<=16:
+                validateUsername = self.getUser(username)
+                if validateUsername == 0:
+                    window['_error_'].update('User already exists, proceed to login!')
+                else:
+                    self.myCursor.execute('INSERT INTO user (username, password) VALUES (%s,%s)', (str(username), str(password)))
+                    self.database.commit()
+                    gui.popup('Successfully registered!')
             else:
-                self.myCursor.execute('INSERT INTO user (username, password) VALUES (%s,%s)', (str(username), str(password)))
-                self.database.commit()
-                gui.popup('Successfully registered!')
+                window['_error_'].update('Username length must be below 12/Password length must be below 16.')
         except:
             window['_error_'].update('Either username already exists, or an error occured.')
 
@@ -59,15 +62,33 @@ CustomGUITheme = {'BACKGROUND': '#282930',
 }
 gui.theme_add_new('LoginTheme', CustomGUITheme)
 gui.theme('LoginTheme')
-layout = [[gui.Text('Login Menu', size=(20,1),justification='center')],
+login_layout = [
+          [gui.VPush()],
           [gui.Text('Username:')],
           [gui.InputText(size=(21,1), key='_username_')],
           [gui.Text('Password:')],
           [gui.InputText(size=(21,1), key='_password_', password_char='*')],
-          [gui.Button('Login'), gui.Button('Register')],
-          [gui.Text(key='_error_', size=(21,2))]
+          [gui.Button('Login')],
+          [gui.Text(key='_error_', size=(21,3))],
+          [gui.VPush()]
 ]
-window = gui.Window('Menu',layout, auto_size_buttons=False, default_button_element_size=(8,1), margins=(50,50))
+
+register_layout=[
+         [gui.VPush()],
+         [gui.Text('Username: (Max 12 letters)')],
+         [gui.InputText(size=(21, 1), key='_regUsername_')],
+         [gui.Text('Password: (Max 16 digits)')],
+         [gui.InputText(size=(21, 1), key='_regPassword_', password_char='*')],
+         [gui.Text('Confirm Password:')],
+         [gui.InputText(size=(21, 1), key='_regConfirmPassword_', password_char='*')],
+         [gui.Button('Register')],
+         [gui.Text(key='_regError_', size=(21, 3))],
+         [gui.VPush()]
+]
+layout = [
+    [gui.TabGroup([[gui.Tab('Login', login_layout), gui.Tab('Register', register_layout)]])],
+]
+window = gui.Window('Menu',layout, auto_size_buttons=False, default_button_element_size=(8,1), margins=(50,50), element_justification='center', text_justification='center')
 
 while True:
     event, value = window.read()
@@ -76,6 +97,9 @@ while True:
     if event=='Login':
         login.loginUser(value['_username_'], value['_password_'])
     if event=='Register':
-        login.addUser(value['_username_'], value['_password_'])
+        if value['_regPassword_']==value['_regConfirmPassword_']:
+            login.addUser(value['_regUsername_'], value['_regPassword_'])
+        else:
+            window['_regError_'].update('Password mismatched.')
 
 window.close()
