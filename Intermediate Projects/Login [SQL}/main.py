@@ -14,18 +14,18 @@ class Login:
 
     def addUser(self, username, password):
         try:
-            if len(username)<=12 and len(password)<=16:
+            if len(username)<=12 and len(password)<=16 and len(username)>0 and len(password)>0:
                 validateUsername = self.getUser(username)
                 if validateUsername == 0:
-                    window['_error_'].update('User already exists, proceed to login!')
+                    window['_regError_'].update('User already exists, proceed to login!')
                 else:
                     self.myCursor.execute('INSERT INTO user (username, password) VALUES (%s,%s)', (str(username), str(password)))
                     self.database.commit()
                     gui.popup('Successfully registered!')
             else:
-                window['_error_'].update('Username length must be below 12/Password length must be below 16.')
+                window['_regError_'].update('Username length must be below 12/Password length must be below 16.')
         except:
-            window['_error_'].update('Either username already exists, or an error occured.')
+            window['_regError_'].update('Either username already exists, or an error occured.')
 
     def getUser(self, username):  # Check whether username already exists in the database or not
         self.myCursor.execute('SELECT * FROM user')
@@ -47,7 +47,7 @@ login = Login()
 
 # login.addUser('test1', 'test')
 # print(login.getUser())
-# login.myCursor.execute('CREATE TABLE user (username VARCHAR(12), password VARCHAR(16))')
+# login.myCursor.execute('CREATE TABLE user (username varchar(12) NOT NULL, password varchar(16) NOT NULL)')
 
 CustomGUITheme = {'BACKGROUND': '#282930',
                   'TEXT': '#FDFFFF',
