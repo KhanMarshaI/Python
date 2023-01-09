@@ -1,3 +1,3 @@
 Login program. Uses PySimpleGUI as the GUI module. Uses mySQL as database. 
 
-![image](https://user-images.githubusercontent.com/108894019/211087489-9b5c013c-34e1-461c-ba1a-cd097296b955.png)
+https://user-images.githubusercontent.com/108894019/211166165-fc2e3613-0d3f-4d95-ac91-62f61b4ebc92.mp4
