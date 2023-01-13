@@ -1,5 +1,6 @@
 import mysql.connector
 import PySimpleGUI as gui
+import re
 
 
 class Login:
@@ -11,10 +12,14 @@ class Login:
             database='testdatabase'
         )
         self.myCursor = self.database.cursor(buffered=True) # if buffer is set to False on clicking the Login button twice the program will crash due to results being loaded in the cursor
+        self.userNamePattern = re.compile('^[a-zA-Z0-9]{3,12}$')
+        self.passwordPattern = re.compile('^[\a-zA-Z0-9]{8,16}$')
 
     def addUser(self, username, password):
         try:
-            if len(username)<=12 and len(password)<=16 and len(username)>0 and len(password)>0:
+            usernameMatch = re.search(self.userNamePattern, username)
+            passwordMatch = re.search(self.passwordPattern, password)
+            if usernameMatch and passwordMatch:
                 validateUsername = self.getUser(username)
                 if validateUsername == 0:
                     window['_regError_'].update('User already exists, proceed to login!')
