@@ -4,3 +4,5 @@ Since there were more than a million password in the wordlist we had to automate
 once the hash matches we return the string at that position.
 
 ![image](https://github.com/KhanMarshaI/Python/assets/108894019/4d51ade1-c005-41da-806e-53061dd73ac5)
+
+[Code]https://github.com/KhanMarshaI/Python/blob/master/Project/Cryptography/hash.py
